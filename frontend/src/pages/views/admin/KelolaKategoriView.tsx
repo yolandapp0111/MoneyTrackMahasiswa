@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
 
 const KelolaKategoriView: React.FC = () => {
-  const [categories, setCategories] = useState<{id: string, nama: string, icon: string}[]>([]);
+  const getInitialCategories = () => {
+    const saved = localStorage.getItem('kategori_admin');
+    if (saved) return JSON.parse(saved);
+    const defaults = [
+      { id: '1', nama: 'Makan', icon: '🍽️' },
+      { id: '2', nama: 'Transport', icon: '🚗' },
+      { id: '3', nama: 'Kos', icon: '🏠' },
+      { id: '4', nama: 'Kuliah', icon: '🎓' },
+      { id: '5', nama: 'Hiburan', icon: '🎮' },
+    ];
+    localStorage.setItem('kategori_admin', JSON.stringify(defaults));
+    return defaults;
+  };
+
+  const [categories, setCategories] = useState<{id: string, nama: string, icon: string}[]>(getInitialCategories);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({ nama: '', icon: '' });
-
-  useEffect(() => {
-    const saved = localStorage.getItem('kategori_admin');
-    if (saved) {
-      setCategories(JSON.parse(saved));
-    } else {
-      const defaultCategories = [
-        { id: '1', nama: 'Makan', icon: '🍽️' },
-        { id: '2', nama: 'Transport', icon: '🚗' },
-        { id: '3', nama: 'Kos', icon: '🏠' },
-        { id: '4', nama: 'Kuliah', icon: '🎓' },
-        { id: '5', nama: 'Hiburan', icon: '🎮' },
-      ];
-      setCategories(defaultCategories);
-      localStorage.setItem('kategori_admin', JSON.stringify(defaultCategories));
-    }
-  }, []);
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();

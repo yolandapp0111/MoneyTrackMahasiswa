@@ -21,20 +21,14 @@ const navItems: { id: View; label: string; icon: React.ReactNode }[] = [
 
 const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const [user] = useState<any>(() => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
+    try { return JSON.parse(userStr); } catch { return null; }
+  });
   const [transaksi, setTransaksi] = useState<any[]>([]);
   const [allUsers, setAllUsers] = useState<any[]>([]);
   const [activeView, setActiveView] = useState<View>('dashboard');
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (!userStr || !token) { navigate('/login'); return; }
-    const u = JSON.parse(userStr);
-    if (u.role !== 'admin') { navigate('/login'); return; }
-    setUser(u);
-    fetchData(token);
-  }, [navigate]);
 
   const fetchData = async (token: string) => {
     try {
@@ -44,6 +38,12 @@ const AdminDashboard: React.FC = () => {
       setAllUsers(resU.data);
     } catch (err) { console.error(err); }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!user || !token || user.role !== 'admin') { navigate('/login'); return; }
+    fetchData(token);
+  }, [navigate, user]);
 
   const refreshUsers = () => {
     const token = localStorage.getItem('token');

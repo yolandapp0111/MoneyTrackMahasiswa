@@ -24,7 +24,7 @@ const DataMahasiswaView: React.FC<Props> = ({ users, onRefresh }) => {
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:5000/api/users/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       onRefresh();
-    } catch (err) {
+    } catch {
       alert('Gagal menghapus');
     }
   };

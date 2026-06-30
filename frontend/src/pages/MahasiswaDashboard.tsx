@@ -23,22 +23,16 @@ const navItems: { id: View; label: string; icon: React.ReactNode }[] = [
 
 const MahasiswaDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<any>(() => {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return null;
+    try { return JSON.parse(userStr); } catch { return null; }
+  });
   const [transaksi, setTransaksi] = useState<any[]>([]);
   const [saldo, setSaldo] = useState(0);
   const [pemasukan, setPemasukan] = useState(0);
   const [pengeluaran, setPengeluaran] = useState(0);
   const [activeView, setActiveView] = useState<View>('dashboard');
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (!userStr || !token) { navigate('/login'); return; }
-    const u = JSON.parse(userStr);
-    if (u.role !== 'mahasiswa') { navigate('/login'); return; }
-    setUser(u);
-    fetchData(token);
-  }, [navigate]);
 
   const fetchData = async (token: string) => {
     try {
@@ -50,6 +44,12 @@ const MahasiswaDashboard: React.FC = () => {
       setPemasukan(masuk); setPengeluaran(keluar); setSaldo(masuk - keluar);
     } catch (err) { console.error(err); }
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!user || !token || user.role !== 'mahasiswa') { navigate('/login'); return; }
+    fetchData(token);
+  }, [navigate, user]);
 
   const handleLogout = () => { localStorage.clear(); navigate('/login'); };
 

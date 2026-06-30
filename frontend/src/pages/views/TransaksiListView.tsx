@@ -33,7 +33,7 @@ const TransaksiListView: React.FC<Props> = ({ transaksi, jenis, onRefresh }) => 
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:5000/api/transaksi/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       if (onRefresh) onRefresh();
-    } catch (err) {
+    } catch {
       alert('Gagal menghapus transaksi');
     }
   };
