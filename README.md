@@ -1,3 +1,8 @@
+Nama : Yolanda Putri Pertiwi
+NIM : 101230111
+Kelas : TF23B
+
+
 # Money Track Mahasiswa
 
 Aplikasi pencatatan keuangan untuk mahasiswa. Dibangun dengan **React + TypeScript** (frontend) dan **Express + TypeScript** (backend) dengan database **MySQL**.
