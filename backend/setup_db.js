@@ -3,16 +3,21 @@ const fs = require('fs');
 
 async function setup() {
   try {
-    console.log('Connecting to MySQL (root, no password)...');
+    const DB_HOST = process.env.DB_HOST || 'localhost';
+    const DB_USER = process.env.DB_USER || 'root';
+    const DB_PASSWORD = process.env.DB_PASSWORD || '';
+    const DB_NAME = process.env.DB_NAME || 'money_track_db';
+
+    console.log(`Connecting to MySQL (${DB_USER}@${DB_HOST})...`);
     const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '' // default XAMPP
+      host: DB_HOST,
+      user: DB_USER,
+      password: DB_PASSWORD
     });
 
-    console.log('Creating database money_track_db...');
-    await connection.query('CREATE DATABASE IF NOT EXISTS money_track_db');
-    await connection.query('USE money_track_db');
+    console.log(`Creating database ${DB_NAME}...`);
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``);
+    await connection.query(`USE \`${DB_NAME}\``);
 
     console.log('Creating tables...');
     await connection.query(`
